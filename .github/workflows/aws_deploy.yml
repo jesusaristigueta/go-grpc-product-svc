@@ -37,12 +37,11 @@ jobs:
           remote-docker image rm -f ${{ env.IMAGE_NAME }}
       continue-on-error: true
     - name: Comprimiendo & Enviando
-
       run: |
         shopt -s expand_aliases
         alias remote-docker="ssh -C ${{ secrets.REMOTE_SERVER_USER }}@${{ secrets.REMOTE_SERVER_HOST }} docker"
         docker save ${{ env.IMAGE_NAME }} | remote-docker load
-        remote-docker container create --name=${{ env.CONTAINER_NAME }} --net ${{ env.INTERNAL_NETWORK_NAME }} --ip ${{ env.INTERNAL_SERVICE_IP }} ${{ env.IMAGE_NAME }}
+        remote-docker container create --name=${{ env.CONTAINER_NAME }} --restart=always --net ${{ env.INTERNAL_NETWORK_NAME }} --ip ${{ env.INTERNAL_SERVICE_IP }} ${{ env.IMAGE_NAME }}
     - name: Iniciando contenedor
       run: |
         shopt -s expand_aliases
